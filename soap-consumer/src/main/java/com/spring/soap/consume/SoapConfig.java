@@ -12,7 +12,7 @@ public class SoapConfig {
     public Jaxb2Marshaller marshaller() {
 
         Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-        marshaller.setContextPath("com.example.generated");
+        marshaller.setContextPath(" com.spring.soap.produce");
 
         return marshaller;
     }
