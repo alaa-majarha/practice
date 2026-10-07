@@ -23,10 +23,9 @@
 
     <packaging>pom</packaging>
 
-
     <modules>
-        <module>soap-producer</module>
-        <module>soap-consumer</module>
+        <module>practice-domain</module>
+        <module>practice-platform</module>
     </modules>
 
 
@@ -34,20 +33,32 @@
         <java.version>21</java.version>
         <camel.version>4.14.1</camel.version>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.apache.camel.springboot</groupId>
-                <artifactId>camel-spring-boot-starter</artifactId>
-                <version>${camel.version}</version>
+                <groupId>org.example</groupId>
+                <artifactId>practice-domain</artifactId>
+                <version>${project.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.camel.springboot</groupId>
-                <artifactId>camel-jms-starter</artifactId>
+                <artifactId>camel-spring-boot-bom</artifactId>
                 <version>${camel.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>1.1.2</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -57,6 +68,12 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
 
+                <!-- XSD -> Java contract generation -->
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>jaxb2-maven-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
 
             </plugins>
         </pluginManagement>

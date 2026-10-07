@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+         http://maven.apache.org/POM/4.0.0
+         https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+
+    <modelVersion>4.0.0</modelVersion>
+
+
+    <parent>
+        <groupId>org.example</groupId>
+        <artifactId>practice</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+
+    <artifactId>practice-platform</artifactId>
+
+
+    <dependencies>
+
+        <!-- Business core -->
+        <dependency>
+            <groupId>org.example</groupId>
+            <artifactId>practice-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web-services</artifactId>
+        </dependency>
+
+        <!-- to produce wsdl -->
+        <dependency>
+            <groupId>wsdl4j</groupId>
+            <artifactId>wsdl4j</artifactId>
+        </dependency>
+
+        <!-- Camel Spring Boot -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- Camel JMS -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jms-starter</artifactId>
+        </dependency>
+
+        <!-- Artemis JMS -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-artemis</artifactId>
+        </dependency>
+
+        <!-- Camel Jackson starter -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jackson-starter</artifactId>
+        </dependency>
+
+        <!-- JAXB runtime -->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- oracle and DB -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        </dependency>
+
+    </dependencies>
+
+
+    <build>
+
+        <plugins>
+
+            <!--
+                Generate Java classes from XSD.
+
+                One execution per schema: the two schemas have different target namespaces, so
+                sharing a package would leave a single package-info.java declaring only one of
+                them. clearOutputDir=false stops the second execution wiping the first's output,
+                and each execution needs its own staleFile for the same reason.
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>jaxb2-maven-plugin</artifactId>
+
+                <executions>
+
+                    <execution>
+                        <id>xjc-account</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/account.xsd</source>
+                            </sources>
+                            <packageName>com.spring.soap.platform.adapter.soap.account</packageName>
+                            <staleFile>${project.build.directory}/jaxb2/.xjcStaleFlag-account</staleFile>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>xjc-payment</id>
+                        <goals>
+                            <goal>xjc</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>src/main/resources/xsd/makePayment.xsd</source>
+                            </sources>
+                            <packageName>com.spring.soap.platform.adapter.soap.payment</packageName>
+                            <staleFile>${project.build.directory}/jaxb2/.xjcStaleFlag-payment</staleFile>
+                            <clearOutputDir>false</clearOutputDir>
+                        </configuration>
+                    </execution>
+
+                </executions>
+
+            </plugin>
+
+            <!-- Produces the executable jar -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+
+</project>
